@@ -7,10 +7,6 @@ import "./randomChar.scss";
 import mjolnir from "../../resources/img/mjolnir.png";
 
 class RandomChar extends Component {
-  constructor(props) {
-    super(props);
-    this.updateChar();
-  }
 
   state = {
     char: {},
@@ -19,6 +15,14 @@ class RandomChar extends Component {
   };
 
   marvelService = new MarvelService();
+
+  componentDidMount () {
+    this.updateChar();
+    this.timerId = setTimeout(this.updateChar, 3000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
 
   onCharloaded = (char) => {
     this.setState({ char, loading : false});
@@ -59,7 +63,7 @@ class RandomChar extends Component {
             Do you want to get to know him better?
           </p>
           <p className="randomchar__title">Or choose another one</p>
-          <button className="button button__main">
+          <button className="button button__main" onClick={this.updateChar}>
             <div className="inner">try it</div>
           </button>
           <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
