@@ -7,7 +7,6 @@ import "./randomChar.scss";
 import mjolnir from "../../resources/img/mjolnir.png";
 
 class RandomChar extends Component {
-
   state = {
     char: {},
     loading: true,
@@ -16,45 +15,50 @@ class RandomChar extends Component {
 
   marvelService = new MarvelService();
 
-  componentDidMount () {
+  componentDidMount() {
     this.updateChar();
     // this.timerId = setTimeout(this.updateChar, 3000);
   }
 
-  componentDidUpdate(){
-
-  }
+  componentDidUpdate() {}
 
   componentWillUnmount() {
     clearInterval(this.timerId);
   }
 
   onCharloaded = (char) => {
-    this.setState({ char, loading : false});
+    this.setState({ char, loading: false });
   };
+
+  onCharLoading() {
+    this.setState({
+      loading: true,
+    });
+  }
 
   onError = () => {
     this.setState({
-      loading:false,
+      loading: false,
       error: true,
     });
   };
 
   updateChar = () => {
     const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-    this.marvelService.getCharacter(id).then(this.onCharloaded).catch(this.onError);
+    this.marvelService
+      .getCharacter(id)
+      .then(this.onCharloaded)
+      .catch(this.onError);
+    this.onCharLoading();
+    this.setState({ error: false });
   };
 
   render() {
-    const {
-      char,
-      loading,
-      error,
-    } = this.state;
+    const { char, loading, error } = this.state;
 
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? <View char={char}/> : null;
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error) ? <View char={char} /> : null;
 
     return (
       <div className="randomchar">
@@ -78,18 +82,34 @@ class RandomChar extends Component {
   }
 }
 
-const View = ({char}) => {
-  const {name, description, thumbnail, homepage, wiki} = char;
+const View = ({ char }) => {
+  const { name, description, thumbnail, homepage, wiki } = char;
 
-  let ojFit = ((thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') ?  "contain" : "cover");
-  let infoSize = (description.split('').length > 164) ? description.substring(0,164)+"..." : description;
-  let info = description === '' ? 'if you need more info click homepage or wiki.' : infoSize;
+  let ojFit =
+    thumbnail ===
+    "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
+      ? "contain"
+      : "cover";
+  let infoSize =
+    description.length > 164
+      ? description.substring(0, 164) + "..."
+      : description;
+  let info =
+    description === ""
+      ? "if you need more information click on homepage or wiki."
+      : infoSize;
+  let nameSize = name.length > 10 ? `${name.substring(0, 15)}...` : name;
 
   return (
     <div className="randomchar__block">
-      <img src={thumbnail} alt="Random character" className="randomchar__img" style={{objectFit: `${ojFit}`}}/> 
+      <img
+        src={thumbnail}
+        alt="Random character"
+        className="randomchar__img"
+        style={{ objectFit: `${ojFit}` }}
+      />
       <div className="randomchar__info">
-        <p className="randomchar__name">{name}</p>
+        <p className="randomchar__name">{nameSize}</p>
         <p className="randomchar__descr">{info}</p>
         <div className="randomchar__btns">
           <a href={homepage} className="button button__main">
