@@ -17,13 +17,6 @@ class RandomChar extends Component {
 
   componentDidMount() {
     this.updateChar();
-    // this.timerId = setTimeout(this.updateChar, 3000);
-  }
-
-  componentDidUpdate() {}
-
-  componentWillUnmount() {
-    clearInterval(this.timerId);
   }
 
   onCharloaded = (char) => {
@@ -90,14 +83,17 @@ const View = ({ char }) => {
     "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
       ? "contain"
       : "cover";
+
   let infoSize =
     description.length > 164
       ? description.substring(0, 164) + "..."
       : description;
+
   let info =
     description === ""
       ? "if you need more information click on homepage or wiki."
       : infoSize;
+
   let nameSize = name.length > 10 ? `${name.substring(0, 15)}...` : name;
 
   return (
