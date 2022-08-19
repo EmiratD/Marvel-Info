@@ -1,4 +1,6 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
+
 import MarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMassage/ErrorMassage";
@@ -11,7 +13,7 @@ class CharList extends Component {
     loading: true,
     error: false,
     newItemLoading: false,
-    offset: 1544,
+    offset: 212,
     charEnded: false,
   };
 
@@ -97,19 +99,23 @@ class CharList extends Component {
 
 const CharItem = ({ heroes, onCharSelected }) => {
   const { id, name, thumbnail } = heroes;
-
+  
   let ojFit =
     thumbnail ===
     "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
-      ? "contain"
-      : "cover";
-
-  return (
-    <li className="char__item" key={id} onClick={() => onCharSelected(id)}>
+    ? "contain"
+    : "cover";
+    
+    return (
+      <li className="char__item" key={id} onClick={() => onCharSelected(id)}>
       <img src={thumbnail} alt={name} style={{ objectFit: `${ojFit}` }}/>
       <div className="char__name">{name}</div>
     </li>
   );
 };
+
+CharList.propTypes = {
+  onCharSelected: PropTypes.func.isRequired,
+}
 
 export default CharList;
