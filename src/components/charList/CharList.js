@@ -107,7 +107,11 @@ const CharItem = ({ heroes, onCharSelected }) => {
     : "cover";
     
     return (
-      <li className="char__item" key={id} onClick={() => onCharSelected(id)}>
+      <li className="char__item" key={id} onClick={() => onCharSelected(id)} tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === ' ' || e.key === "Enter") {
+            onCharSelected(id);
+        }}}>
       <img src={thumbnail} alt={name} style={{ objectFit: `${ojFit}` }}/>
       <div className="char__name">{name}</div>
     </li>
