@@ -1,5 +1,5 @@
 import {  useEffect, useState } from "react";
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMassage/ErrorMassage";
 
@@ -8,40 +8,28 @@ import mjolnir from "../../resources/img/mjolnir.png";
 
 const RandomChar = () => {
   const [char,setChar] = useState({});
-  const [loading,setLoading] = useState(true);
-  const [error, setError] = useState(false) ;
 
-  const marvelService = new MarvelService();
+
+  const {loading, error, getCharacter, clearError} = useMarvelService();
 
   useEffect(()=>{updateChar();}, [])
 
   const onCharloaded = (char) => {
     setChar(char);
-    setLoading(false)
   };
 
-  const onCharLoading = () => {
-   setLoading(true)
-  }
-
-  const onError = () => {
-    setLoading(false);
-    setError(true);
-  };
 
   const updateChar = () => {
+    clearError();
     const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-    marvelService
-      .getCharacter(id)
+    getCharacter(id)
       .then(onCharloaded)
-      .catch(onError);
-    onCharLoading();
-    setError(false)
   };
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
   const content = !(loading || error) ? <View char={char} /> : null;
+  console.log(1);
 
   return (
     <div className="randomchar">
@@ -68,23 +56,22 @@ const RandomChar = () => {
 const View = ({ char }) => {
   const { name, description, thumbnail, homepage, wiki } = char;
 
-  let ojFit =
+  const ojFit =
     thumbnail ===
     "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
       ? "contain"
       : "cover";
 
-  let infoSize =
-    description.length > 164
-      ? description.substring(0, 164) + "..."
-      : description;
 
-  let info =
-    description === ""
-      ? "if you need more information click on homepage or wiki."
-      : infoSize;
 
-  let nameSize = name.length > 10 ? `${name.substring(0, 15)}...` : name;
+  // const infoSize = description.length > 164 ? description.substring(0, 164) + "..." : description;   
+
+  // const info =
+  //   description === ""
+  //     ? "if you need more information click on homepage or wiki."
+  //     : infoSize;
+
+  // const nameSize = name.length > 10 ? `${name.substring(0, 15)}...` : name;
 
   return (
     <div className="randomchar__block">
@@ -95,8 +82,8 @@ const View = ({ char }) => {
         style={{ objectFit: `${ojFit}` }}
       />
       <div className="randomchar__info">
-        <p className="randomchar__name">{nameSize}</p>
-        <p className="randomchar__descr">{info}</p>
+        <p className="randomchar__name">{name}</p>
+        <p className="randomchar__descr">{description}</p>
         <div className="randomchar__btns">
           <a href={homepage} className="button button__main">
             <div className="inner">homepage</div>

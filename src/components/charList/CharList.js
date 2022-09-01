@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-import MarvelService from "../../services/MarvelService";
+import useMarvelService from "../../services/MarvelService";
 import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMassage/ErrorMassage";
 
@@ -10,29 +10,22 @@ import "./charList.scss";
 const CharList = (props) => {
 
   const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [newItemLoading, setItemLoading] = useState(false);
-  const [offset, setOffset] = useState(781);
+  const [offset, setOffset] = useState(7);
   const [charEnded, setCharEnded] = useState(false);
 
-  const marvelService = new MarvelService();
+  const {loading, error, getAllCharacters} = useMarvelService();
 
   useEffect(() => {
-    onRequest();
+    onRequest(offset, true);
   }, []);
 
-  const onRequest = (offset) => {
-    onCharListLoading();
-    marvelService
-      .getAllCharacters(offset)
+  const onRequest = (offset, initial) => {
+    initial ? setItemLoading(false) : setItemLoading(true);
+    getAllCharacters(offset)
       .then(getLoadingChar)
-      .catch(getErrorMassege);
   };
 
-  const onCharListLoading = () => {
-    setItemLoading(true);
-  };
 
   const getLoadingChar = (newList) => {
     let ended = false;
@@ -40,14 +33,9 @@ const CharList = (props) => {
       ended = true;
     }
     setList([...list, ...newList]);
-    setLoading(false);
     setItemLoading(false);
     setOffset(offset + 9);
     setCharEnded(ended);
-  };
-
-  const getErrorMassege = () => {
-    setError(true);
   };
 
   const getCharItem = (list) => {
@@ -69,22 +57,19 @@ const CharList = (props) => {
 
   const errorMessage = error ? (
     <ul className="char__grid2">
-      {" "}
-      <ErrorMessage />{" "}
+      <ErrorMessage />
     </ul>
   ) : null;
-  const spinner = loading ? (
+  const spinner = loading && !newItemLoading ? (
     <ul className="char__grid2">
-      {" "}
-      <Spinner />{" "}
+      <Spinner />
     </ul>
   ) : null;
-  const content = !(loading || error) ? listHEroes : null;
 
   return (
     <div className="char__list">
       <ul className="char__grid">
-        {content}
+        {listHEroes}
         {errorMessage}
         {spinner}
       </ul>
