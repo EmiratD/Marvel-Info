@@ -42,7 +42,7 @@ const ComicsList = () => {
         <a href="#">
           <img
             src={thumbnail}
-            alt="title"
+            alt={title}
             className="comics__item-img"
           />
           <div className="comics__item-name">{title}</div>
@@ -59,14 +59,21 @@ const ComicsList = () => {
       arr.push(<Comics comics={element} key={element.id} />);
     });
 
-    return arr;
+    return <ul className="comics__grid">{arr}</ul>;
   };
 
   const comicsAll = renderAllComics(list);
 
+  const errorMessage = error ? (
+      <ErrorMessage />
+  ) : null;
+  const spinner = loading && !newItemLoading ? (
+      <Spinner />
+  ) : null;
+
   return (
     <div className="comics__list">
-      <ul className="comics__grid">{comicsAll}</ul>
+      {comicsAll}{spinner}{errorMessage}
       <button onClick={onRequest} className="button button__main button__long">
         <div className="inner">load more</div>
       </button>
