@@ -9,7 +9,7 @@ import "./comicsList.scss";
 const ComicsList = () => {
   const [list, setList] = useState([]);
   const [newItemLoading, setItemLoading] = useState(false);
-  const [offset, setOffset] = useState(7);
+  const [offset, setOffset] = useState(0);
   const [charEnded, setCharEnded] = useState(false);
 
   const { loading, error, getAllComics } = useMarvelService();
@@ -74,7 +74,7 @@ const ComicsList = () => {
   return (
     <div className="comics__list">
       {comicsAll}{spinner}{errorMessage}
-      <button onClick={onRequest} className="button button__main button__long">
+      <button onClick={() => {onRequest(offset)}} className="button button__main button__long">
         <div className="inner">load more</div>
       </button>
     </div>

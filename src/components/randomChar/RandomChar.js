@@ -62,17 +62,6 @@ const View = ({ char }) => {
       ? "contain"
       : "cover";
 
-
-
-  // const infoSize = description.length > 164 ? description.substring(0, 164) + "..." : description;   
-
-  // const info =
-  //   description === ""
-  //     ? "if you need more information click on homepage or wiki."
-  //     : infoSize;
-
-  // const nameSize = name.length > 10 ? `${name.substring(0, 15)}...` : name;
-
   return (
     <div className="randomchar__block">
       <img
