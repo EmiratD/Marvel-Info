@@ -24,7 +24,7 @@ const CharInfo = (props) => {
     }
     getCharacter(charId)
       .then(onCharloaded)
-  });
+  }, [getCharacter, props]);
 
   const onCharloaded = (char) => {
     setChar(char)
@@ -80,6 +80,7 @@ const View = ({char}) => {
               </li>
             );
           }
+          return null;
         })}
       </ul>
     </>

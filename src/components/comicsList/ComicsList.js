@@ -26,7 +26,7 @@ const ComicsList = () => {
 
   const getLoadingChar = (newList) => {
     let ended = false;
-    if (newList.length < 8) {
+    if (newList.length < 0) {
       ended = true;
     }
     setList([...list, ...newList]);
